@@ -5,17 +5,21 @@ import com.dsa.cityautocomplete.model.City;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class IMTester {
     City[] mainList;
     static Trie trie;
+    static SuffixTree sTree;
 
     public IMTester() throws IOException {
         loadInfo();
 
-        trie = new Trie();
-        trie.loadKeys(mainList);
-        System.out.println("The trie should now contain " + mainList.length + " words.");
+//        trie = new Trie();
+//        trie.loadKeys(mainList);
+//        System.out.println("The trie should now contain " + mainList.length + " words.");
+        buildTree();
     }
 
     private void loadInfo() throws IOException {
@@ -44,6 +48,21 @@ public class IMTester {
 
     public static void main(String args) throws IOException {
         IMTester test = new IMTester();
+    }
+
+    public void buildTree() {
+        sTree = new SuffixTree(mainList[0].getName());
+        List<SuffixTree.Node> links = new ArrayList<>();
+        for (City city : mainList){
+            if (!city.getName().equals("")) {
+                links = sTree.createSuffixTree(city.getName(), sTree.root, links);
+            }
+        }
+        return;
+    }
+
+    public static boolean suffixSearch(String str){
+        return sTree.search(str);
     }
 
 }

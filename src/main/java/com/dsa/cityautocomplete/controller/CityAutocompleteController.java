@@ -23,4 +23,8 @@ public class CityAutocompleteController {
         return IMTester.testPrefix(str);
     }
 
+    @GetMapping("/suffixSearch/{str}")
+    public boolean suffixSearch(@PathVariable String str){
+        return IMTester.suffixSearch(str);
+    }
 }
