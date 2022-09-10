@@ -1,32 +1,26 @@
 package com.dsa.cityautocomplete.datastructures;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.dsa.cityautocomplete.model.City;
+
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Arrays;
-import java.util.Scanner;
+import java.io.IOException;
 
 public class IMTester {
-    String[] mainList;
+    City[] mainList;
     static Trie trie;
 
-    public IMTester(String filename) {
-        loadInfo(filename);
+    public IMTester() throws IOException {
+        loadInfo();
 
         trie = new Trie();
-        trie.loadKeys(new java.util.ArrayList<String>(Arrays.asList(mainList)));
+        trie.loadKeys(mainList);
         System.out.println("The trie should now contain " + mainList.length + " words.");
     }
 
-    private void loadInfo(String filename) {
-        Scanner sc = null;
-        try {
-            sc = new Scanner(new File(filename));
-        } catch(FileNotFoundException e) {
-            System.out.println(e.getMessage());
-            System.exit(1);
-        }
-        mainList = new String[Integer.parseInt(sc.nextLine())];
-        for(int i = 0; i<mainList.length; i++) mainList[i] = sc.nextLine();
+    private void loadInfo() throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        mainList = objectMapper.readValue(new File("cities.json"), City[].class);
     }
 
     public static String testContains(String input) {
@@ -48,9 +42,8 @@ public class IMTester {
         return result;
     }
 
-    public static void main(String args) {
-        String filename = "C:\\Ankit\\City Autocomplete\\city-autocomplete\\src\\main\\java\\com\\dsa\\cityautocomplete\\datastructures/firstHundred.txt";
-        IMTester test = new IMTester(filename);
+    public static void main(String args) throws IOException {
+        IMTester test = new IMTester();
     }
 
 }

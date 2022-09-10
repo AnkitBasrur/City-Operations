@@ -1,5 +1,7 @@
 package com.dsa.cityautocomplete.datastructures;
 
+import com.dsa.cityautocomplete.model.City;
+
 import java.util.*;
 
 public class Trie
@@ -22,7 +24,7 @@ public class Trie
 
         for(int i = 0; i < key.length(); i++){
             cur.createChild(key.charAt(i));
-            cur = cur.children[(int)key.charAt(i)];
+            cur = cur.children.get(key.charAt(i));
         }
 
         if(cur != null)
@@ -30,11 +32,11 @@ public class Trie
     }
 
 
-    public void loadKeys(ArrayList<String> keys)
+    public void loadKeys(City[] keys)
     {
-        for (int i = 0; i < keys.size(); i++)
+        for (int i = 0; i < keys.length; i++)
         {
-            insert(keys.get(i));
+            insert(keys[i].getName());
         }
         return;
     }
@@ -45,8 +47,8 @@ public class Trie
         TrieNode maxNode = root;
 
         for(int i = 0; i < key.length(); i++){
-            if(maxNode.children[(int)key.charAt(i)] != null)
-                maxNode = maxNode.children[(int)key.charAt(i)];
+            if(maxNode.children.get(key.charAt(i)) != null)
+                maxNode = maxNode.children.get(key.charAt(i));
             else
                 return maxNode;
         }
@@ -92,31 +94,28 @@ public class Trie
         if(cur == null)
             return list;
 
-        for(TrieNode node : cur.children){
-            list.addAll(recursivePrefix(node));
+        for(Map.Entry<Character, TrieNode> node : cur.children.entrySet()){
+            list.addAll(recursivePrefix(node.getValue()));
 
-            if(node != null && node.endOfKey)
-                list.add(node.getUpperString(node));
+            if(node != null && node.getValue().endOfKey)
+                list.add(node.getValue().getUpperString(node.getValue()));
         }
 
         return list;
     }
 
-
     private class TrieNode
     {
 
-        public static final int NUMCHILDREN = 256;
-
         private TrieNode   parent;
-        private TrieNode[] children;
+        private Map<Character, TrieNode> children;
         private int        depth;
         private char       charInParent;
         private boolean endOfKey;
 
         public TrieNode()
         {
-            children = new TrieNode[NUMCHILDREN];
+            children = new HashMap<>();
             endOfKey = false;
             depth = 0;
             charInParent = (char)0;
@@ -124,12 +123,10 @@ public class Trie
 
         public TrieNode createChild(char  c)
         {
-            TrieNode child       = new TrieNode();
+            TrieNode child = new TrieNode();
 
-            int index = (int)c;
-
-            if(children[index] == null){
-                this.children[index] = child;
+            if(!children.containsKey(c)){
+                this.children.put(c, child);
 
                 child.charInParent = c;
                 child.depth = this.depth + 1;
@@ -144,7 +141,7 @@ public class Trie
 
         public TrieNode getChild(char c)
         {
-            return children[ c ];
+            return children.get(c);
         }
 
         public boolean isEndOfKey()
