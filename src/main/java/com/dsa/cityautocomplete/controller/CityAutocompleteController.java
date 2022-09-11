@@ -32,4 +32,9 @@ public class CityAutocompleteController {
     public boolean kmpSearch(@PathVariable String str){
         return IMTester.kmpSearch(str);
     }
+
+    @GetMapping("/boyerMoore/{str}")
+    public boolean boyerMoore(@PathVariable String str){
+        return IMTester.boyerMoore(str);
+    }
 }

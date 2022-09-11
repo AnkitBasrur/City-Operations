@@ -78,4 +78,18 @@ public class IMTester {
         return false;
     }
 
+    public static boolean boyerMoore(String str){
+        boolean result = false;
+
+        for(City city : mainList){
+            if(city.getName().length()<str.length())
+                continue;
+            BoyerMoore bm = new BoyerMoore(str, city.getName());
+            int op = bm.search(str, city.getName());
+            if(op!=-1 && op!=0)
+                return true;
+        }
+        return false;
+    }
+
 }
