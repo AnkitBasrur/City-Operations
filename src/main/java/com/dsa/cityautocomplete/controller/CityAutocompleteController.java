@@ -27,4 +27,9 @@ public class CityAutocompleteController {
     public boolean suffixSearch(@PathVariable String str){
         return IMTester.suffixSearch(str);
     }
+
+    @GetMapping("/kmpSearch/{str}")
+    public boolean kmpSearch(@PathVariable String str){
+        return IMTester.kmpSearch(str);
+    }
 }

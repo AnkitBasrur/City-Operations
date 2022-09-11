@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class IMTester {
-    City[] mainList;
+    static City[] mainList;
     static Trie trie;
     static SuffixTree sTree;
 
@@ -63,6 +63,19 @@ public class IMTester {
 
     public static boolean suffixSearch(String str){
         return sTree.search(str);
+    }
+
+    public static boolean kmpSearch(String str){
+        boolean result = false;
+
+        for(City city : mainList){
+            if(city.getName().length()<str.length())
+                continue;
+            KMP kmp = new KMP(str, city.getName());
+            if(kmp.search(str, city.getName())!=-1)
+                return true;
+        }
+        return false;
     }
 
 }
